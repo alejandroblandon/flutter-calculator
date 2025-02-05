@@ -26,7 +26,22 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void _onPressed(String value) {
     setState(() {
-      _expression += value;
+      if (value == 'x²') {
+        try {
+          final expression = Expression.parse(_expression);
+          final evaluator = const ExpressionEvaluator();
+          final num result = evaluator.eval(expression, {});
+          _expression = (result * result).toString();
+        } catch (e) {
+          _expression = 'Error';
+        }
+      } else if (value == '⌫') {
+        if (_expression.isNotEmpty) {
+          _expression = _expression.substring(0, _expression.length - 1);
+        }
+      } else {
+        _expression += value;
+      }
     });
   }
 
@@ -95,6 +110,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 _buildButton('='),
                 _buildButton('+'),
                 _buildButton('C'),
+                _buildButton('x²'),
+                _buildButton('%'),
+                _buildButton('⌫'),
               ],
             ),
           ),
